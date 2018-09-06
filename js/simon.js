@@ -1,6 +1,9 @@
 var KEYS = ['c', 'd', 'e', 'f'];
 var NOTE_DURATION = 1000;
 
+var notePattern = [];
+var copyPattern = [];
+
 // NoteBox
 //
 // Acts as an interface to the coloured note boxes on the page, exposing methods
@@ -60,6 +63,36 @@ function NoteBox(key, onClick) {
 	boxEl.addEventListener('mousedown', this.clickHandler);
 }
 
+function playNextNote() { 
+	//debugger;
+        KEYS.forEach(function(key) { notes[key].disable(); });
+	
+	notePattern.push(KEYS[Math.floor(Math.random() * 4)]);
+
+	notePattern.forEach(function(key, i) { 
+		setTimeout(notes[key].play.bind(null, key), i * NOTE_DURATION);
+	});
+        
+	KEYS.forEach(function(key) { notes[key].enable(); });
+}
+
+function onClick(key) {
+        copyPattern.push(key);
+        
+	for (var i = 0; i < copyPattern.length; i++) {
+		if (copyPattern[i] != notePattern[i]) {
+			notePattern = [];
+			copyPattern = [];
+                        setTimeout(playNextNote, 2000);
+		}
+	}
+
+	if (copyPattern.length == notePattern.length) {
+		setTimeout(playNextNote, 2000);
+                copyPattern = [];
+	}
+}
+
 // Example usage of NoteBox.
 //
 // This will create a map from key strings (i.e. 'c') to NoteBox objects so that
@@ -68,9 +101,9 @@ function NoteBox(key, onClick) {
 var notes = {};
 
 KEYS.forEach(function (key) {
-	notes[key] = new NoteBox(key);
+	debugger;
+	notes[key] = new NoteBox(key, onClick);
+	notes[key].disable();
 });
 
-KEYS.concat(KEYS.slice().reverse()).forEach(function(key, i) {
-	setTimeout(notes[key].play.bind(null, key), i * NOTE_DURATION);
-});
+playNextNote();
