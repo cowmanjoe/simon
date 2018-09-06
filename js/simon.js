@@ -1,5 +1,6 @@
 var KEYS = ['c', 'd', 'e', 'f'];
 var NOTE_DURATION = 1000;
+var ECHO_DELAY = 2500;
 
 // NoteBox
 //
@@ -67,8 +68,19 @@ function NoteBox(key, onClick) {
 // It will also demonstrate programmatically playing notes by calling play directly.
 var notes = {};
 
+
+
+var onClick = function(key) {
+        setTimeout(function() {
+		var audioEl = document.getElementById(key + '-audio');
+		audioEl.currentTime = 0;
+		audioEl.Play();
+	}, ECHO_DELAY);
+}
+
+
 KEYS.forEach(function (key) {
-	notes[key] = new NoteBox(key);
+	notes[key] = new NoteBox(key, onClick);
 });
 
 KEYS.concat(KEYS.slice().reverse()).forEach(function(key, i) {
