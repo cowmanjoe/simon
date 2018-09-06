@@ -2,6 +2,9 @@ var KEYS = ['c', 'd', 'e', 'f'];
 var NOTE_DURATION = 1000;
 var ECHO_DELAY = 2500;
 
+var echos = [];
+var echoTimeout = null;
+
 // NoteBox
 //
 // Acts as an interface to the coloured note boxes on the page, exposing methods
@@ -71,11 +74,30 @@ var notes = {};
 
 
 var onClick = function(key) {
-        setTimeout(function() {
-		var audioEl = document.getElementById(key + '-audio');
-		audioEl.currentTime = 0;
-		audioEl.Play();
-	}, ECHO_DELAY);
+        var echo = {
+		key: key,
+		time: new Date().getTime()
+	}
+	echos.push(echo);
+
+        if (echoTimeout)
+		clearTimeout(echoTimeout);
+
+	echoTimeout = setTimeout(playEcho, ECHO_DELAY); 
+}
+
+var playEcho = function() {
+        var offset = echos[0].time;
+	
+	echos.forEach(function(echo) {
+                setTimeout(function() { 
+			notes[echo.key].play();
+
+		}, echo.time - offset);
+	});
+
+	echos = [];
+	echoTimeout = null;
 }
 
 
