@@ -72,22 +72,27 @@ function playNextNote() {
 	notePattern.forEach(function(key, i) { 
 		setTimeout(notes[key].play.bind(null, key), i * NOTE_DURATION);
 	});
-        
-	KEYS.forEach(function(key) { notes[key].enable(); });
+
+	KEYS.forEach(function(key) {
+		setTimeout(notes[key].enable.bind(null, key), (notePattern.length + 1) * NOTE_DURATION)
+	});
 }
 
 function onClick(key) {
-        copyPattern.push(key);
+        if (notePattern === []) return;
+
+	copyPattern.push(key);
         
 	for (var i = 0; i < copyPattern.length; i++) {
-		if (copyPattern[i] != notePattern[i]) {
+		if (copyPattern[i] !== notePattern[i]) {
 			notePattern = [];
 			copyPattern = [];
                         setTimeout(playNextNote, 2000);
+			return;
 		}
 	}
 
-	if (copyPattern.length == notePattern.length) {
+	if (copyPattern.length === notePattern.length) {
 		setTimeout(playNextNote, 2000);
                 copyPattern = [];
 	}
