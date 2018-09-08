@@ -74,7 +74,7 @@ function playNextNote() {
 	});
 
 	KEYS.forEach(function(key) {
-		setTimeout(notes[key].enable.bind(null, key), (notePattern.length + 1) * NOTE_DURATION)
+		setTimeout(notes[key].enable.bind(null, key), notePattern.length * NOTE_DURATION)
 	});
 }
 
@@ -85,17 +85,31 @@ function onClick(key) {
         
 	for (var i = 0; i < copyPattern.length; i++) {
 		if (copyPattern[i] !== notePattern[i]) {
-			notePattern = [];
-			copyPattern = [];
-                        setTimeout(playNextNote, 2000);
+			resetGame();
 			return;
 		}
 	}
 
 	if (copyPattern.length === notePattern.length) {
+                KEYS.forEach(function(key) { notes[key].disable(); });
 		setTimeout(playNextNote, 2000);
                 copyPattern = [];
 	}
+}
+
+function resetGame() {
+        KEYS.forEach(function(key) { notes[key].disable(); });
+
+        notePattern = [];
+        copyPattern = [];
+
+        var gameOver = document.getElementById("game-over");
+        gameOver.classList.remove("transparent");
+
+        setTimeout(function() {
+                gameOver.classList.add("transparent");
+                playNextNote();
+        }, 3000);
 }
 
 // Example usage of NoteBox.

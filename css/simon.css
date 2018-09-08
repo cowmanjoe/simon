@@ -6,7 +6,7 @@ html, body {
 /* Container for note boxes */
 #simon {
   display: flex;
-  height: 100%;
+  height: 75%;
   align-items: center;
   justify-content: center;
   flex-direction: row;
@@ -88,4 +88,17 @@ html, body {
 
 #f:hover {
   background-color: rgba(85, 229, 0, 0.6);
+}
+
+#game-over {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.transparent {
+  opacity: 0;
+}
+
+h1 {
+  color: rgba(255, 0, 0, 1);
 }
